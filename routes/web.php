@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\MoviesController;
+use App\Http\Controllers\ActorsController;
+use App\Http\Controllers\DirectorsController;
+use App\Http\Controllers\ReviewsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,11 +17,36 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::resource('/movies', MoviesController::class, [
+    'except' => ['index', 'show']
+])->middleware(['auth', 'permission']);
+Route::resource('/movies', MoviesController::class, [
+    'only' => ['index', 'show']
+]);
+
+Route::resource('/actors', ActorsController::class, [
+    'except' => ['index', 'show']
+])->middleware(['auth', 'permission']);;
+Route::resource('/actors', ActorsController::class, [
+    'only' => ['index', 'show']
+]);
+
+Route::resource('/directors', DirectorsController::class, [
+    'except' => ['index', 'show',]
+])->middleware(['auth', 'permission']);;
+Route::resource('/directors', DirectorsController::class, [
+    'only' => ['index', 'show',]
+]);
+
+Route::resource('/movies/{id}/review', ReviewsController::class, [
+    'except' => ['index']
+])->middleware(['auth']);
